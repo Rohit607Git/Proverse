@@ -1,0 +1,116 @@
+{% extends "header2.html" %}
+{% block titleweb %}
+  <title>ProVerse | Dashboard</title>
+{% endblock %}
+{% block contentweb %}
+    <h1>Welcome back, <span style="color:#00c3ff;">{{no_kpi.0.username}} {% if no_kpi.0.fullname %}({{no_kpi.0.fullname}}){% endif %}</span></h1>
+      <p>Here's your project and task overview.</p>
+      <div class="detail-box project-grid">
+        <div class="project-card">
+          <h3>My Projects</h3>
+          <div class="number">{{no_kpi.1}}</div>
+          <small>Ongoing and Completed</small>
+          <form action="/project" method="get">
+            <button type="submit" class="btn save-btn">View Projects</button>
+          </form>
+        </div>
+        <div class="project-card">
+          <h3>My Tasks & Deadlines</h3>
+          <div class="number">{{no_kpi.2}}</div>
+          <small>Due today, upcoming, overdue</small>
+          <form action="/tasks" method="get">
+            <button type="submit" class="btn save-btn">View Tasks</button>
+          </form>
+        </div>
+        <div class="project-card">
+          <h3>Invitations</h3>
+          <div class="number">{{no_kpi.3}}</div>
+          <small>Requests & Invites</small>
+          <form action="/invites" method="get">
+            <button type="submit" class="btn save-btn">Manage Invitations</button>
+          </form>
+        </div>
+      </div>
+      <div class="detail-box">
+        <h2>Invitations & Requests</h2>
+        {% if from_views or to_views %}
+        <ul class="team-list">
+          {% for f_views in from_views %}
+          <li class="invite-item">
+            <div class="invite-info">
+              {% if f_views.status == 'Requested' %}
+                You requested to join <strong>"{{f_views.project.title}}"</strong> — awaiting creator approval.
+              {% elif f_views.status == 'Invited' %}
+                You invited {{f_views.to_user.username}} {% if f_views.to_user.fullname %}({{f_views.to_user.fullname}}){% endif %} to join <strong>"{{f_views.project.title}}"</strong>.<br>
+                <strong>Role: </strong>{{f_views.to_user.role}}<br>
+                <strong>Skills: </strong>{{f_views.to_user.skills}}
+              {% elif f_views.status == 'Rejected' %}
+                  {% if f_views.to_user.id == no_kpi.0.id %}
+                  Your request to join <strong>"{{f_views.project.title}}"</strong> was rejected.
+                  {% else %}
+                  Your invitation {{f_views.to_user.username}} {% if f_views.to_user.fullname %}({{f_views.to_user.fullname}}){% endif %} to join <strong>"{{f_views.project.title}}"</strong> was rejected.
+                  {% endif %}
+              {% endif %}
+            </div>
+            <div class="invite-btns">
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="iid" value="{{f_views.id}}">
+                {% if f_views.status == 'Requested' %}
+                  <button class="btn delete-btn" name="action" value="cancel">Cancel Request</button>
+                {% elif f_views.status == 'Invited' %}
+                  <button class="btn delete-btn" name="action" value="cancel">Cancel Invite</button>
+                {% elif f_views.status == 'Rejected' %}
+                  <button class="btn delete-btn" name="action" value="remove">Remove</button>
+                {% endif %}
+              </form>
+            </div>
+          </li>
+          {% endfor %}
+          {% for t_views in to_views %}
+          <li class="invite-item">
+            <div class="invite-info">
+              {{t_views.from_user.username}} {% if t_views.from_user.fullname %}({{t_views.from_user.fullname}}){% endif %} has requested to join your project <strong>"{{t_views.project.title}}"</strong>.<br>
+              <strong>Role: </strong>{{t_views.from_user.role}}<br>
+              <strong>Skills: </strong>{{t_views.from_user.skills}}
+            </div>
+            <div class="invite-btns">
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="iid" value="{{t_views.id}}">
+                <button class="btn save-btn" name="action" value="accept">Accept</button>
+                <button class="btn delete-btn" name="action" value="reject">Reject</button>
+              </form>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="no-projects-message">No requests or invations found.</div>
+        {% endif %}
+      </div>
+      <div class="detail-box">
+        <h2>Urgent Tasks & Deadlines</h2>
+        {% if tasks %}
+        <ul class="team-list">
+          {% for task in tasks %}
+          <li class="invite-item">
+            <div class="invite-info">
+              <h3>{{task.title}}</h3>
+              <p class="dashboard-cards-space">
+                Due: {{ task.due_date|date:"Y-m-d" }} | Status: <span class="status {{task.status|lower}}">{{task.status}}</span>
+              </p>
+            </div>
+            <form action="{% url 'tasks_detail' %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="tid" value="{{task.id}}">
+              <button class="btn save-btn" name="action" value="view">View</button>
+            </form>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="no-projects-message">No projects found.</div>
+        {% endif %}
+      </div>
+{% endblock %}

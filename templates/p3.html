@@ -1,0 +1,91 @@
+{% extends "header2.html" %}
+{% block titleweb %}
+  <title>ProVerse | Project Details</title>
+{% endblock %}
+{% block contentweb %}
+  <h1>Project: {{ project.title }}</h1>
+  <div class="detail-box">
+    <h2>Description</h2>
+    <p>{{ project.description}}</p>
+    <p><strong>Status: </strong><span class="status {{ project.status|lower }}">{{ project.status }}</span></p>
+    <p><strong>Start: </strong>{{ project.start_date|date:"F j, Y" }}</p>
+    <p><strong>End: </strong>{{ project.end_date|date:"F j, Y" }}</p>
+    <div class="btn-layout2">
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="pid" value="{{ project.id }}">
+        <button class="btn edit-btn" name="action" value="project_edit">Edit Project</button>
+      </form>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="pid" value="{{ project.id }}">
+        <button class="btn save-btn" name="action" value="search">Invite Users</button>
+      </form>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="pid" value="{{ project.id }}">
+        <button class="btn delete-btn" name="action" value="delete">Delete Project</button>
+      </form>
+    </div>
+  </div>
+  <div class="detail-box">
+    <div class="top-header">
+      <h2>Tasks</h2>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="pid" value="{{ project.id }}">
+        <button class="btn save-btn" name="action" value="task_create">Add Task</button>
+      </form>
+    </div>
+    {% if tasks %}
+    <ul class="team-list">
+      {% for task in tasks %}
+      <li>
+        <div class="dashboard-layout">
+          <div class="dashboard-cards-space">
+            <p>{{ task.title }}</p>
+            <p>Description: {{ task.description }}</p>
+            <p>Assigned to: {% if task.assigned_to %}{{ task.assigned_to.user.username }}{% else %}None{% endif %} · Status: <span class="status {{ task.status|lower }}">{{ task.get_status_display }}</span> · Priority: <span class="status {{ task.priority|lower }}">{{ task.priority }}</span> · Due: {{ task.due_date|date:"j M Y" }}</p>
+          </div>
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="pid" value="{{ task.id }}">
+            <button class="btn edit-btn" name="action" value="task_edit">Edit</button>
+          </form>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="no-projects-message">This project don’t have any tasks yet.</div>
+    {% endif %}
+  </div>
+  <div class="detail-box">
+    <h2>Team Members</h2>
+    <ul class="team-list">
+      {% for team in teams %}
+      <li>
+        <div class="dashboard-layout">
+          {% if team.user.id == project.created_by.id %}
+          <div>
+            <strong>{{team.user.username}} (You)</strong> — {{ team.user.role }}<br/>
+            <small>Skills: {{ team.user.skills }}</small>
+          </div>
+          <span class="btn3 b1">Owner</span>
+          {% else %}
+          <div>
+            <strong>{{team.user.username}} {% if team.user.fullname %}({{team.user.fullname}}){% endif %}</strong> — {{ team.user.role }}<br/>
+            <small>Skills: {{ team.user.skills }}</small>
+          </div>
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="pid" value="{{ team.id }}">
+            <button class="btn delete-btn" name="action" value="remove_team">Remove</button>
+          </form>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

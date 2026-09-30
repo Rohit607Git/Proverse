@@ -1,0 +1,48 @@
+{% extends "header2.html" %}
+{% block titleweb %}
+  <title>ProVerse | Invite Users</title>
+{% endblock %}
+{% block contentweb %}
+    <h1>Invite Users to Project: {{pname}}</h1>
+      <form class="container" method="post">
+        {% csrf_token %}
+        <h3>Search Users</h3>
+        <input type="text" id="search" name="search" value="{{ query }}" placeholder="Search by name, skill, or role">
+        <input type="hidden" name="pid" value="{{ pid }}">
+        <div class="btn-layout2">
+          <button class="btn save-btn" name="action" value="search">Search</button>
+          <button class="btn cancel-btn" name="action" value="view">Cancel</button>
+        </div>
+      </form>
+      <h2>Available Users</h2>
+      {% if users %}
+      <ul class="team-list">
+        {% for item in users %}
+          <li class="user-item">
+            <div>
+              <strong>{{item.user.username}} {% if item.user.fullname %}({{item.user.fullname}}){% endif %}</strong> — {{ item.user.role }}<br/>
+              <small>Skills: {{ item.user.skills }}</small>
+            </div>
+            {% if item.status == 'Owner' %}
+            <span class="btn3 b1">{{ item.status }}</span>
+            {% elif item.status == 'Already Joined' %}
+            <span class="btn3 b2">{{ item.status }}</span>
+            {% elif item.status == 'Invited' %}
+            <span class="btn3 b3">{{ item.status }}</span>
+            {% elif item.status == 'Requested' %}
+            <span class="btn3 b4">{{ item.status }}</span>
+            {% else %}
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="pid" value="{{pid}}">
+                <input type="hidden" name="user_invite_id" value="{{item.user.id}}">
+                <button class="btn save-btn" name="action" value="invite">{{ item.status }}</button>
+              </form>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="no-projects-message">No Users found.</div>
+      {% endif %}
+{% endblock %}

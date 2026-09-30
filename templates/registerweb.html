@@ -1,0 +1,88 @@
+{% extends "header1.html" %}
+{% block stylelink %}
+<link rel="stylesheet" href="/static/registerstyle.css">
+<link rel="stylesheet" href="/static/messagestyle.css">
+{% endblock %}
+{% block mainbody %}
+<canvas id="network-canvas"></canvas>
+<div id="messBox" class="messstyle {% if error %}show{% endif %}">
+    <span  id="messText">{{error|default:''}}</span>
+    <button class="close-btn" onclick="removemess()">&times;</button>
+</div>
+<div class="loginbox">
+    <form method="POST">
+        {% csrf_token %}
+        <h1>Discover More by Registering!</h1>
+        <div class="inputbox">
+            <label for="usernameid">Username</label>
+            <input type="text" name="username" placeholder="Username" id="usernameid" value="{{user_data.username|default_if_none:''}}">
+        </div>
+        <div class="inputbox">
+            <label for="emailid">Email</label>
+            <input type="email" name="email" placeholder="Email" id="emailid" value="{{user_data.email|default_if_none:''}}">
+        </div>
+        <div class="inputbox">
+            <label for="passwordid">Password</label>
+            <input type="password" name="password" placeholder="Password" id="passwordid" value="{{user_data.password|default_if_none:''}}">
+        </div>
+        <div class="inputbox">
+            <label for="comfirmpasswordid">Comfirm password</label>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" id="comfirmpasswordid" value="{{user_data.confirm_password|default_if_none:''}}">
+        </div>
+        <div class="showsecret">
+            <label for="Show_mysecret">Show Password</label>
+            <input type="checkbox" id="Show_mysecret" onclick="myFunction();">
+        </div>
+        <div class="genderinput">
+            <input type="radio" name="gender" value="Male" id="m" {% if user_data.gender == "Male" %}checked{% endif %}>
+            <input type="radio" name="gender" value="Female" id="f" {% if user_data.gender == "Female" %}checked{% endif %}>
+            <input type="radio" name="gender" value="Other" id="n" {% if user_data.gender == "Other" %}checked{% endif %}>
+            <h2>Gender</h2>
+            <div>
+                <label for="m"><span class="dot md"></span>
+                    <span class="gender">Male</span></label>
+                <label for="f"><span class="dot fd"></span>
+                    <span class="gender">Female</span></label>
+                <label for="n"><span class="dot nd"></span>
+                    <span class="gender">Prefer not to say</span></label>
+            </div>
+        </div>
+        <button type="submit" onclick="return jsValidateForm()">Sign Up</button>
+    </form>
+</div>
+<script src="/static/mess_show.js"></script>
+<script>
+    function myFunction(){
+        var x = document.getElementById("passwordid");
+        var y = document.getElementById("comfirmpasswordid");
+        if (x.type === "password"){
+            x.type = "text"; 
+            y.type = "text";} 
+        else{
+            x.type = "password";
+            y.type = "password";}}
+    function jsValidateForm(){
+        const u=document.getElementById("usernameid").value.trim();
+        const e=document.getElementById("emailid").value.trim();
+        const p1=document.getElementById("passwordid").value.trim();
+        const p2=document.getElementById("comfirmpasswordid").value.trim();
+        const g=document.querySelector('input[name="gender"]:checked');
+        if(u==="" || e==="" || p1==="" || p2==="" || !g){
+            messbox.classList.add('show');
+            messText.innerText="All Fields Are Required!";
+            return false;
+        }
+        else if(p1!==p2){
+            messbox.classList.add('show');
+            messText.innerText="Password Not Matched!";
+            return false;
+        }
+        else if(p1.length <4){
+            messbox.classList.add('show');
+            messText.innerText="Please Enter Password Atleast 4 Characters";
+            return false;
+        }
+        return true;}
+</script>
+<script src="/static/bg.js"></script>
+{% endblock %}

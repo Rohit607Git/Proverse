@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Account Info</title>
+  <link rel="stylesheet" href="userstyle.css">
+  <link rel="stylesheet" href="web.css">
+</head>
+
+<body>
+  <input type="checkbox" id="hambtn">
+  <header>
+    <div class="logo">
+      <div class="mobbtn">
+        <label for="hambtn"></label>
+        <div class="mobmenu"></div>
+      </div>
+      <img src="./tmslogo.png" alt="">
+      <h1>Pro Verse</h1>
+    </div>
+    <a id="login" href="./loginweb.html">
+      Log out
+    </a>
+  </header>
+  <main>
+    <aside class="navmenu">
+      <ul>
+        <li><a href="./homeweb.html">Dashboard</a></li>
+        <li><a href="">My Projects</a></li>
+        <li><a href="">Tasks</a></li>
+        <li><a href="">Public Projects</a></li>
+        <li><a href="">Invitations</a></li>
+        <li><a href="">Account</a></li>
+      </ul>
+    </aside>
+    <section>
+      <h1>Project: Build-a-Verse</h1>
+      <div class="detail-box">
+        <h2>Description</h2>
+        <p>This platform lets users connect, collaborate, and build ideas into real-life solutions in teams. Powered by
+          shared imagination and collaboration.</p>
+        <p><strong>Status: </strong><span class="status public">Public</span></p>
+        <p><strong>Start: </strong>2025-06-01</p>
+        <p><strong>End: </strong>2025-08-15</p>
+        <p><strong>Created By: </strong>You</p>
+        <div class="btn-layout2">
+          <a href="edit-project.html" class="btn edit-btn">Edit Project</a>
+          <a href="#" class="btn save-btn">Invite Users</a>
+          <button class="btn delete-btn">Delete Project</button>
+        </div>
+      </div>
+      <div class="detail-box">
+        <h2>Team Members</h2>
+        <ul class="team-list">
+          <li>
+            <div class="dashboard-layout">
+              <p>You (Owner)</p>
+              <button class="btn delete-btn" onclick="alert('View task details')">Remove</button>
+            </div>
+          </li>
+          <li>
+            <div class="dashboard-layout">
+              <p>Alice (Developer)</p>
+              <button class="btn delete-btn" onclick="alert('View task details')">Remove</button>
+            </div>
+          </li>
+          <li>
+            <div class="dashboard-layout">
+              <p>Bob (Designer)</p>
+              <button class="btn delete-btn" onclick="alert('View task details')">Remove</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="detail-box">
+        <div class="top-header">
+          <h2>Tasks</h2>
+          <a href="#" class="btn save-btn">Add Task</a>
+        </div>
+        <ul class="team-list">
+          <li>
+            <div class="dashboard-layout">
+              <div>
+                <p>Create project wireframe</p>
+                <p>Assigned to: Alice · Status: <span class="status progress">In Progress</span> · Due: 2025-07-01</p>
+              </div>
+              <button class="btn edit-btn" onclick="alert('View task details')">Edit</button>
+            </div>
+          </li>
+          <li>
+            <div class="dashboard-layout">
+              <div>
+                <p>Setup Django models</p>
+                <p>Assigned to: You · Status: <span class="status todo">To Do</span> · Due: 2025-07-05</p>
+              </div>
+              <button class="btn edit-btn" onclick="alert('View task details')">Edit</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+</body>
+
+</html>

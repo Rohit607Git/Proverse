@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {% block titleweb %}
+  {% endblock %}
+  <link rel="icon" type="image/x-icon" href="/static/prosrc/settings(1).ico">
+  <link rel="stylesheet" href="/static/userstyle.css">
+  <link rel="stylesheet" href="/static/webstyle.css">
+  <link rel="stylesheet" href="/static/messagestyle.css">
+</head>
+<body>
+  <input type="checkbox" id="hambtn">
+  <header>
+    <div class="logo">
+      <div class="mobbtn">
+        <label for="hambtn"></label>
+        <div class="mobmenu"></div>
+      </div>
+      <img src="/static/prosrc/tmslogo.png" alt="">
+      <h1>Pro Verse</h1>
+    </div>
+    <a id="login" href="/signout">
+      <p>Log<br>out</p>
+      <img src="/static/prosrc/logout.png" alt="" style="height: 74%;padding-left: 8px;">
+    </a>
+  </header>
+  <main>
+    <aside class="navmenu">
+      <ul>
+        <li><a href="/dashboard" class="{% if active_page == 'dashboard' %}navhighlight{% endif %}">Dashboard</a></li>
+        <li><a href="/project" class="{% if active_page == 'projects' %}navhighlight{% endif %}">My Projects</a></li>
+        <li><a href="/tasks" class="{% if active_page == 'tasks' %}navhighlight{% endif %}">Tasks</a></li>
+        <li><a href="/public" class="{% if active_page == 'public' %}navhighlight{% endif %}">Public Projects</a></li>
+        <li><a href="/invites" class="{% if active_page == 'invites' %}navhighlight{% endif %}">Invitations</a></li>
+        <li><a href="/account" class="{% if active_page == 'account' %}navhighlight{% endif %}">Account</a></li>
+      </ul>
+    </aside>
+    <section>
+        {% block contentweb %}
+        {% endblock %}
+    </section>
+  </main>
+</body>
+</html>

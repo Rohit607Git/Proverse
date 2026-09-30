@@ -1,0 +1,47 @@
+{% extends "header1.html" %}
+{% block stylelink %}
+<link rel="stylesheet" href="/static/loginstyle.css">
+<link rel="stylesheet" href="/static/messagestyle.css">
+{% endblock %}
+{% block mainbody %}
+<canvas id="network-canvas"></canvas>
+<div id="messBox" class="messstyle {% if error %}show{% endif %}">
+    <span  id="messText">{{error|default:''}}</span>
+    <button class="close-btn" onclick="removemess()">&times;</button>
+</div>
+<div class="loginbox">
+    <h2>Welcome Back</h2>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <label for="usernameid">Username</label>
+        <input type="text" name="username" placeholder="Username" id="usernameid" value="{{user_data.username|default_if_none:''}}">
+        <label for="passwordid">Password</label>
+        <input type="password" name="password" placeholder="Password" id="passwordid" value="{{user_data.password|default_if_none:''}}">
+        <div class="showsecret">
+            <label for="Show_mysecret">Show Password</label>
+            <input type="checkbox" name="Show_mysecret" onclick="myFunction();" id="">
+        </div>
+        <button type="submit" onclick="return jsValidateForm();">Log In</button>
+    </form>
+    <p>Don't have an account? <a href="/signup">Sign up</a></p>
+</div>
+<script src="/static/mess_show.js"></script>
+<script>
+    function myFunction(){
+        var x = document.getElementById("passwordid");
+        if (x.type === "password"){
+            x.type = "text";} 
+        else{
+            x.type = "password";}}
+    function jsValidateForm(){
+        const u=document.getElementById("usernameid").value.trim();
+        const p=document.getElementById("passwordid").value.trim();
+        if (u==="" || p===""){
+            messbox.classList.add('show');
+            messText.innerText="All Fields Are Required!"
+            return false;
+        }
+        return true;}
+</script>
+<script src="/static/bg.js"></script>
+{% endblock %}

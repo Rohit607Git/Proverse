@@ -1,0 +1,45 @@
+{% extends "header2.html" %}
+{% block titleweb %}
+  <title>ProVerse | Task Details</title>
+{% endblock %}
+{% block contentweb %}
+    <h1>Task: {{task.title}}</h1>
+    <div class="container">
+      <div class="info-group">
+        <label>Description</label>
+        <p>{{task.description}}</p>
+      </div>
+        <div class="info-group">
+          <label>Project Name</label>
+          <p>{{task.project.title}}</p>
+        </div>
+        <div class="info-group">
+          <label>Created By</label>
+          <p>{{task.project.created_by.username}} {% if userid == task.project.created_by.id %}(You){% elif task.project.created_by.fullname %}({{task.project.created_by.fullname}}){% endif %}</p>
+        </div>
+        <div class="info-group">
+          <label>Assigned To</label>
+          <p>{{task.assigned_to.user.username}} (You)</p>
+        </div>
+        <p class="dashboard-cards-space">
+          Current Status: <span class="status {{task.status|lower}}">{{task.status}}</span> · Priority: <span class="status {{task.priority|lower}}">{{task.priority}}</span> · Due Date: {{ task.due_date|date:"Y-m-d" }}
+        </p>
+      <div class="info-group">
+        <form method="POST">
+          {% csrf_token %}
+          <label for="statusid">Change Your Task Status</label>
+          <select name="status" id="statusid">
+            <option value="ToDo" {% if task.status == 'ToDo' %}selected{% endif %}>To Do</option>
+            <option value="InProgress" {% if task.status == 'InProgress' %}selected{% endif %}>In Progress</option>
+            <option value="Done" {% if task.status == 'Done' %}selected{% endif %}>Done</option>
+          </select>
+          <input type="hidden" name="tid" value="{{task.id}}">
+          <div class="btn-layout">
+            <button class="btn save-btn" name="action" value="update">Update Status</button>
+            {% if userid != task.project.created_by.id %}
+            <button class="btn delete-btn" name="action" value="leave_task">Leave Project</button>{% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+{% endblock %}

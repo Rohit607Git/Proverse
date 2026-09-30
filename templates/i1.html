@@ -1,0 +1,32 @@
+{% extends "header2.html" %}
+{% block titleweb %}
+  <title>ProVerse | Received Invitations</title>
+{% endblock %}
+{% block contentweb %}
+    <h1>Received Invitations</h1>
+      {% if user_invites %}
+      <p>You have {{num_invites}} pending project invitations:</p>
+      {% for user_invite in user_invites %}
+      <div class="detail-box">
+        <h2>Project: {{user_invite.project.title}}</h2>
+        <p><strong>Description:</strong> {{user_invite.project.description}}</p>
+        <p><strong>Invited By:</strong> {{user_invite.from_user.username}}</p>
+        <p><strong>Visibility:</strong> <span class="status {{user_invite.project.status|lower}}">{{user_invite.project.status}}</span></p>
+        <div class="invite-btns">
+          <form method="POST" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="pid" value="{{user_invite.id}}" />
+            <button type="submit" class="btn save-btn" name="action" value="accept">Accept</button>
+          </form>
+          <form method="POST" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="pid" value="{{user_invite.id}}" />
+            <button type="submit" class="btn delete-btn" name="action" value="reject">Reject</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="no-projects-message">You have no pending project invitations yet.</div>
+      {% endif %}
+{% endblock %}

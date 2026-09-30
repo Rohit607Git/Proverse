@@ -1,0 +1,74 @@
+{% extends "header2.html" %}
+{% block  titleweb %}
+<title>ProVerse | Edit Account</title>
+{% endblock %}
+{% block  contentweb %}
+<div id="messBox" class="messstyle {% if error %}show{% endif %}">
+    <span  id="messText">{{error|default:''}}</span>
+    <button class="close-btn" onclick="removemess()">&times;</button>
+</div>
+<div class="container">
+  <h2>Edit Profile</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <label for="fullname">Full Name</label>
+    <input type="text" id="fullname" name="fullname" value="{{ user.fullname }}" />
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" value="{{ user.username }}"/>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" value="{{ user.email }}"/>
+    <label for="gender">Gender</label>
+    <select id="gender" name="gender">
+      <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+      <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+      <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+    </select>
+    <label for="role">Role</label>
+    <select id="role" name="role">
+      <option value="" {% if not user.role %}selected{% endif %}>Choose Your Role</option>
+      <option value="developer" {% if user.role == 'developer' %}selected{% endif %}>Developer</option>
+      <option value="designer" {% if user.role == 'designer' %}selected{% endif %}>Designer</option>
+      <option value="manager" {% if user.role == 'manager' %}selected{% endif %}>Manager</option>
+      <option value="tester" {% if user.role == 'tester' %}selected{% endif %}>Tester</option>
+      <option value="other" {% if user.role == 'other' %}selected{% endif %}>Other</option>
+    </select>
+    <label>Skills</label>
+    <div class="skillopt">
+      <label><input type="checkbox" name="skills" value=" Python" {% if " Python" in user.skills %}checked{% endif %}> Python</label>
+      <label><input type="checkbox" name="skills" value=" Javascript" {% if " Javascript" in user.skills %}checked{% endif %}> JavaScript</label>
+      <label><input type="checkbox" name="skills" value=" Html_css" {% if " Html_css" in user.skills %}checked{% endif %}> HTML/CSS</label>
+      <label><input type="checkbox" name="skills" value=" Django" {% if " Django" in user.skills %}checked{% endif %}> Django</label>
+      <label><input type="checkbox" name="skills" value=" React" {% if " React" in user.skills %}checked{% endif %}> React</label>
+      <label><input type="checkbox" name="skills" value=" Other" {% if " Other" in user.skills %}checked{% endif %}> Other</label>
+    </div>
+    <div class="btn-layout">
+      <button type="submit" class="btn save-btn" onclick="return jsValidateForm();">Save Changes</button>
+      <a class="btn" href="/account">Cancel</a>
+    </div>
+  </form>
+</div>
+<script src="/static/mess_show.js"></script>
+<script>
+  function jsValidateForm(){
+    const f=document.getElementById("fullname").value.trim();
+    const u=document.getElementById("username").value.trim();
+    const e=document.getElementById("email").value.trim();
+    const g=document.getElementById("gender").value.trim();
+    let char_f=false;
+    for (let i = 0; i < f.length; i++) {
+      if (!(f[i] >= 'A' && f[i] <= 'Z') && !(f[i] >= 'a' && f[i] <= 'z') && f[i] !== ' '){
+        char_f=true;
+        break;}}
+    if(u==="" || e==="" || g===""){
+        messbox.classList.add('show');
+        messText.innerText="Username, Email and Gender Fields Are Required!"
+        return false;
+    }
+    else if(char_f){
+        messbox.classList.add('show');
+        messText.innerText="Full name must use letters and spaces only."
+        return false;
+    }
+    return true;}
+</script>
+{% endblock %}

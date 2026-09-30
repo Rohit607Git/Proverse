@@ -1,0 +1,32 @@
+{% extends "header2.html" %}
+{% block titleweb %}
+  <title>ProVerse | My Projects</title>
+{% endblock %}
+{% block contentweb %}
+    <div class="top-header">
+      <h1>My Projects</h1>
+      <a href="{% url 'project_create' %}" class="btn save-btn"> Create New Project</a>
+    </div>
+    {% if projects %}
+    <div class="project-grid">
+      {% for project in projects %}
+      <div class="project-card">
+        <h2>{{ project.p.title }}</h2>
+        <p>{{ project.p.description|truncatechars:60 }}</p>
+        <div class="meta">
+          <span class="status {{ project.p.status|lower }}"> {{ project.p.status }}</span>
+          <span> {{ project.p.start_date|date:"j M Y" }} - {{ project.p.end_date|date:"j M Y" }}</span>
+          <span> {{project.m}} Members</span>
+        </div>
+        <form method="post" action="{% url 'project_detail' %}">
+          {% csrf_token %}
+          <input type="hidden" name="pid" value="{{ project.p.id }}">
+          <button class="btn edit-btn" name="action" value="view">View</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <div class="no-projects-message">You don’t have any projects yet.</div>
+    {% endif %}
+{% endblock %}

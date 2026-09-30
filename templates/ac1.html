@@ -1,0 +1,53 @@
+{% extends "header2.html" %}
+{% block  titleweb %}
+  <title>ProVerse | Account Info</title>
+{% endblock %}
+{% block  contentweb %}
+      <div class="container">
+        <h2>Account Information</h2>
+        <div class="info-group">
+          <span class="info-label">Full Name:</span>
+          <span>{{ user.fullname }}</span>
+        </div>
+
+        <div class="info-group">
+          <span class="info-label">Username:</span>
+          <span>{{ user.username }}</span>
+        </div>
+    
+        <div class="info-group">
+          <span class="info-label">Email:</span>
+          <span>{{ user.email }}</span>
+        </div>
+
+        <div class="info-group">
+          <span class="info-label">Gender:</span>
+          <span>{{ user.gender }}</span>
+        </div>
+    
+        <div class="info-group">
+          <span class="info-label">Role:</span>
+          <span>{{ user.role }}</span>
+        </div>
+    
+        <div class="info-group">
+          <span class="info-label">Skills:</span>
+          <span>{{ user.skills }}</span>
+        </div>
+    
+        <div class="btn-layout">
+          <form action="{% url 'acedit' %}" method="get">
+            <button class="btn edit-btn">Edit</button>
+          </form>
+          <form action="{% url 'editpassword' %}" method="get">
+            <button type="submit" class="btn save-btn">Change Password</button>
+          </form>
+          <form method="post">
+            {% csrf_token %}
+            <button class="btn delete-btn" onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.')">
+              Delete Account
+            </button>
+          </form>
+        </div>
+      </div>
+{% endblock %}

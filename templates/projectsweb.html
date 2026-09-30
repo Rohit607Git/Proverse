@@ -1,0 +1,32 @@
+{% extends "header1.html" %}
+{% block stylelink %}
+<link rel="stylesheet" href="/static/projectsstyle.css">
+{% endblock %}
+{% block mainbody %}
+<div class="quote-block">
+        Explore exciting open projects. <a href="{% url 'register' %}">Join now</a> to collaborate!
+    </div>
+    <div class="searchproject">
+        <h1>Explore Public Projects</h1>
+        <form method="get">
+        <input type="text" id="search" name="search" value="{{ query }}" placeholder="Search by name or description">
+            <button class="search">Search</button>
+        </form>
+    </div>
+    {% if projects %}
+    <div class="project-grid">
+        {% for project in projects %}
+        <div class="project-card">
+            <h2>{{project.title}}</h2>
+            <p>{{project.description|truncatechars:100}}</p>
+            <div class="meta">
+                <p>{{ project.start_date|date:"j M Y" }} - {{ project.end_date|date:"j M Y" }}</p>
+                <p><strong>Created by:</strong> {{project.created_by.email}}</p>
+            </div>
+      </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-projects-message">No projects found.</div>
+    {% endif %}
+{% endblock %}

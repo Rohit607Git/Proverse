@@ -1,0 +1,61 @@
+{% extends "header2.html" %}
+{% block titleweb %}
+  <title>ProVerse | Create Task</title>
+{% endblock %}
+{% block contentweb %}
+<div id="messBox" class="messstyle {% if error %}show{% endif %}">
+    <span  id="messText">{{error|default:''}}</span>
+    <button class="close-btn" onclick="removemess()">&times;</button>
+</div>
+<h1>Create New Task</h1>
+<div class="container">
+  <form method="post">
+    {% csrf_token %}
+    <label for="title">Task Title</label>
+    <input type="text" id="title" name="title" placeholder="Enter task heading ..." value="{{user_data.title|default_if_none:''}}">
+    <label for="description">Task Description</label>
+    <textarea class="longtextwidth" id="description" name="description" rows="5" placeholder="Explain the task details...">{{user_data.description|default_if_none:''}}</textarea>
+    <label for="assigned_to">Assign To</label>
+    <select id="assigned_to" name="assigned_to">
+      <option value=""  {% if not user_data.assigned_to %}selected{% endif %}>-- Select Member --</option>
+      {% for team in teams %}
+          <option value="{{team.id}}" {% if user_data.assigned_to == team.id|stringformat:"s" %}selected{% endif %}>{% if team.user.id == project.created_by.id %}You{% else %}{{team.user.username}}{% endif %}</option>
+      {% endfor %}
+    </select>
+    <label for="status">Status</label>
+    <select id="status" name="status">
+      <option value="ToDo" {% if user_data.status == 'ToDo' %}selected{% endif %}>ToDo</option>
+      <option value="InProgress" {% if user_data.status == 'InProgress' %}selected{% endif %}>InProgress</option>
+      <option value="Done" {% if user_data.status == 'Done' %}selected{% endif %}>Done</option>
+    </select>
+    <label for="priority">Priority</label>
+    <select id="priority" name="priority">
+      <option value="Low" {% if user_data.priority == 'Low' %}selected{% endif %}>Low</option>
+      <option value="Medium" {% if user_data.priority == 'Medium' %}selected{% endif %}>Medium</option>
+      <option value="High" {% if user_data.priority == 'High' %}selected{% endif %}>High</option>
+    </select>
+    <label for="due_date">Due Date</label>
+    <input type="date" id="due_date" name="due_date" value="{{user_data.due_date|default_if_none:''}}">
+    <div class="btn-layout">
+      <input type="hidden" name="pid" value="{% if project.id %}{{ project.id }}{% else %}{{ user_data.pid }}{% endif %}">
+      <button type="submit" class="btn save-btn" name="action" value="create" onclick="return jsValidateForm()">Save Task</button>
+      <button class="btn cancel-btn" name="action" value="view">Cancel</button>
+    </div>
+  </form>
+</div>
+<script src="/static/mess_show.js"></script>
+<script>
+  function jsValidateForm(){
+        const t=document.getElementById("title").value.trim();
+        const d=document.getElementById("description").value.trim();
+        const s=document.getElementById("status").value.trim();
+        const p=document.getElementById("priority").value.trim();
+        const dd=document.getElementById("due_date").value.trim();
+        if(t==="" || d==="" || s==="" || p==="" || dd===""){
+            messbox.classList.add('show');
+            messText.innerText="All Fields Are Required!";
+            return false;
+        }
+        return true;}
+</script>
+{% endblock %}

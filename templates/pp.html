@@ -1,0 +1,40 @@
+{% extends "header2.html" %}
+{% block titleweb %}
+  <title>ProVerse | Public Projects</title>
+{% endblock %}
+{% block contentweb %}
+    <h1>Explore Public Projects</h1>
+    <form class="container" method="post" style="margin-bottom: 32px;">
+      {% csrf_token %}
+      <h3>Search Projects</h3>
+      <input type="text" id="search" name="search" value="{{ query }}" placeholder="Search by title or description">
+      <div class="btn-layout2">
+        <button class="btn save-btn" name="action" value="search">Search</button>
+      </div>
+    </form>
+    {% for project in projects %}
+    <div class="detail-box">
+      <h2>Project: {{project.p.title}}</h2>
+      <p><strong>Description:</strong> {{project.p.description}}</p>
+      <p><strong>Created by:</strong> {{project.p.created_by.username}} {% if project.p.created_by.fullname %}({{project.p.created_by.fullname}}){% endif %}</p>
+      <p><strong>Email of created by:</strong> {{project.p.created_by.email}}</p>
+      {% if project.s == 'Owner' %}
+      <span class="btn2 b1">Owner</span>
+      {% elif project.s == 'Already Joined' %}
+      <span class="btn2 b2">Already Joined</span>
+      {% elif project.s == 'Invited' %}
+      <span class="btn2 b3">Invited</span>
+      {% elif project.s == 'Requested' %}
+      <span class="btn2 b4">Requested</span>
+      {% else %}
+      <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="pid" value="{{project.p.id}}">
+        <button class="btn save-btn" name="action" value="requested">Join Project</button>
+      </form>
+      {% endif %}
+    </div>
+    {% empty %}
+    <div class="no-projects-message">No projects found.</div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "header2.html" %}
+{% block titleweb %}
+  <title>ProVerse | My Tasks</title>
+{% endblock %}
+{% block contentweb %}
+  {% if tasks or projects %}
+    <h1>My Assigned Tasks</h1>
+    {% if tasks %}
+    <ul class="team-list">
+      {% for task in tasks %}
+      <li class="invite-item">
+        <div class="invite-info">
+          <div class="info-label">{{task.title}}</div>
+          <p class="dashboard-cards-space">
+            Project: <strong>{{task.project.title}}</strong>
+            Status: <span class="status {{task.status|lower}}">{{task.status}}</span> · Priority: <span class="status {{task.priority|lower}}">{{task.priority}}</span> · Due: {{ task.due_date|date:"Y-m-d" }}
+          </p>
+        </div>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="tid" value="{{task.id}}">
+          <button class="btn save-btn" name="action" value="view">View</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="no-projects-message">You don’t assgined any tasks yet.</div>
+    {% endif %}
+    {% if projects %}
+    <h1>Projects Joined</h1>
+    <ul class="team-list">
+      {% for project in projects %}
+      <li class="invite-item">
+        <div class="invite-info">
+          <div class="info-label">{{project.title}}</div>
+          <p>{{ project.description }}</p>
+          <p class="dashboard-cards-space">
+            Status: <span class="status {{project.status|lower}}">{{project.status}}</span> <span> {{ project.start_date|date:"j M Y" }} - {{ project.end_date|date:"j M Y" }}</span>
+          </p>
+          <p><strong>Created by:</strong> {{project.created_by.username}} {% if project.created_by.fullname %}({{project.created_by.fullname}}){% endif %}</p>
+          <p><strong>Email of created by:</strong> {{project.created_by.email}}</p>
+        </div>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="tid" value="{{project.id}}">
+          <button class="btn delete-btn" name="action" value="leave_project">Leave Project</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  {% else %}
+  <div class="no-projects-message">You don’t joined any project yet.</div>
+  {% endif %}
+{% endblock %}

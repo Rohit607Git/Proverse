@@ -1,0 +1,59 @@
+{% extends "header2.html" %}
+{% block titleweb %}
+<title>ProVerse | Edit Password</title>
+{% endblock %}
+{% block contentweb %}
+<div id="messBox" class="messstyle {% if error %}show{% endif %}">
+    <span  id="messText">{{error|default:''}}</span>
+    <button class="close-btn" onclick="removemess()">&times;</button>
+</div>
+<div class="container">
+	<h2>Change Password</h2>
+	<form method="POST">
+		{% csrf_token %}
+		<label for="new_password">New Password</label>
+		<input type="password" id="new_password" name="new_password" placeholder="Enter new password" />
+		<label for="comfirm_password">Confirm New Password</label>
+		<input type="password" id="comfirm_passwordid" name="comfirm_password" placeholder="Confirm new password" />
+		<div class="showsecret">
+            <label for="Show_mysecret">Show Password</label>
+            <input type="checkbox" id="Show_mysecret" onclick="myFunction();">
+        </div>
+		<div class="btn-layout">
+			<button type="submit" class="btn save-btn" onclick="return jsValidateForm();">Save New Password</button>
+			<a class="btn" href="/account">Cancel</a>
+		</div>
+	</form>
+</div>
+<script src="/static/mess_show.js"></script>
+<script>
+	function myFunction(){
+        var x = document.getElementById("new_password");
+        var y = document.getElementById("comfirm_passwordid");
+        if (x.type === "password"){
+            x.type = "text"; 
+            y.type = "text";} 
+        else{
+            x.type = "password";
+            y.type = "password";}}
+	function jsValidateForm(){
+        const p1=document.getElementById("new_password").value.trim();
+        const p2=document.getElementById("comfirm_passwordid").value.trim();
+        if(p1==="" || p2===""){
+            messbox.classList.add('show');
+            messText.innerText="Enter New Password And Type Again To Comfirm"
+            return false;
+        }
+        else if(p1!==p2){
+            messbox.classList.add('show');
+            messText.innerText="Password Not Matched!"
+            return false;
+        }
+        else if(p1.length <4){
+            messbox.classList.add('show');
+            messText.innerText="Please Enter Password Atleast 4 Characters"
+            return false;
+        }
+        return true;}
+</script>
+{% endblock %}

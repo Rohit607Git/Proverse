@@ -1,0 +1,54 @@
+{% extends "header2.html" %}
+{% block titleweb %}
+  <title>ProVerse | Create Project</title>
+  {% endblock %}
+{% block contentweb %}
+    <div id="messBox" class="messstyle {% if error %}show{% endif %}">
+        <span  id="messText">{{error|default:''}}</span>
+        <button class="close-btn" onclick="removemess()">&times;</button>
+    </div>
+   <h1>Create New Project</h1>
+      <div class="container">
+        <form class="form-card" method="post">
+          {% csrf_token %}
+          <label for="title">Project Title</label>
+          <input type="text" id="title" name="title" placeholder="e.g., Build-a-Verse" value="{{user_data.title|default_if_none:''}}">
+          <label for="description">Project Description</label>
+          <textarea class="longtextwidth" id="description" name="description" rows="5" placeholder="Describe the project idea...">{{user_data.description|default_if_none:''}}</textarea>
+          <label for="status">Project Status</label>
+          <select id="status" name="status">
+            <option value="" {% if not user_data.status %}selected{% endif %}>-- Choose --</option>
+            <option value="Public" {% if user_data.status == 'Public' %}selected{% endif %}>Public</option>
+            <option value="Private" {% if user_data.status == 'Private' %}selected{% endif %}>Private</option>
+          </select>
+          <label for="start_date">Start Date</label>
+          <input type="date" id="start_date" name="start_date" value="{{user_data.start_date|default_if_none:''}}">
+          <label for="end_date">End Date</label>
+          <input type="date" id="end_date" name="end_date" value="{{user_data.end_date|default_if_none:''}}">
+          <div class="btn-layout">
+            <button type="submit" class="btn save-btn" onclick="return jsValidateForm()">Create Project</button>
+            <a href="/project" class="btn">Cancel</a>
+          </div>
+        </form>
+      </div>
+    <script src="/static/mess_show.js"></script>
+    <script>
+      function jsValidateForm(){
+        const t=document.getElementById("title").value.trim();
+        const d=document.getElementById("description").value.trim();
+        const s=document.getElementById("status").value.trim();
+        const sd=document.getElementById("start_data").value.trim();
+        const ed=document.getElementById("end_data").value.trim();
+        if(t==="" || d==="" || s==="" || sd==="" || ed===""){
+            messbox.classList.add('show');
+            messText.innerText="All Fields Are Required!"
+            return false;
+        }
+        else if(new Date(sd) >= new Date(ed)){
+            messbox.classList.add('show');
+            messText.innerText="Please Enter End Date Must After The Start Date"
+            return false;
+        }
+        return true;}
+    </script>
+{% endblock %}
